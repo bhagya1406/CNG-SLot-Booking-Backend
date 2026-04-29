@@ -56,15 +56,28 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
-        ex.printStackTrace(); // Log for debugging
+public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
 
-        ErrorResponse error = new ErrorResponse(
-                false,
-                "Internal server error",
-                new ArrayList<>(),
-                LocalDateTime.now());
+    ex.printStackTrace(); // keep this
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
+    ErrorResponse error = new ErrorResponse(
+            false,
+            ex.getMessage(),   // ✅ SHOW REAL ERROR
+            new ArrayList<>(),
+            LocalDateTime.now());
+
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+}
+
+@ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+public ResponseEntity<ErrorResponse> handleDatabaseError(Exception ex) {
+
+    ErrorResponse error = new ErrorResponse(
+            false,
+            "Database error: " + ex.getMessage(),
+            new ArrayList<>(),
+            LocalDateTime.now());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+}
 }
