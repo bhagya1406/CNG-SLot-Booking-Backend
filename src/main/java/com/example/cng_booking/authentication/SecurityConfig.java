@@ -50,7 +50,14 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable());
 
-        http.cors();
+        http.cors(cors -> cors.configurationSource(request -> {
+    var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+    corsConfig.setAllowCredentials(true);
+    corsConfig.addAllowedOrigin("https://cng-slot-booking-frontend-production.up.railway.app");
+    corsConfig.addAllowedHeader("*");
+    corsConfig.addAllowedMethod("*");
+    return corsConfig;
+}));
 
         http.sessionManagement(sess ->
                 sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
