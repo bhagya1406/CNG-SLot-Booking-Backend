@@ -28,13 +28,10 @@ public class MultiRoleAuthenticationProvider implements AuthenticationProvider {
         String id = token.getId();
         String rawPassword = token.getPassword();
 
-        System.out.println("rawPassword: " + rawPassword);
-        System.out.println("id: " + id);
-
         CustomPrincipal principal = (CustomPrincipal) customDetailsService.loadUser(id, role);
 
         if (!passwordEncoder.matches(rawPassword, principal.getPassword())) {
-            throw new UnauthorizedException("Invalid Password");
+            throw new UnauthorizedException("Invalid password");
         }
 
         return new MultiRoleAuthenticationToken(principal, role, principal.getAuthorities());

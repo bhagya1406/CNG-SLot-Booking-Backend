@@ -41,14 +41,13 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .map(fe -> new FieldErrorDTO(
-                    fe.getField(), 
-                    fe.getRejectedValue(), 
+                    fe.getField(),
                     fe.getDefaultMessage())).toList();
 
         ErrorResponse error = new ErrorResponse(
-            false, 
-            ex.getMessage(), 
-            fieldErrors, 
+            false,
+            "Validation failed",
+            fieldErrors,
             LocalDateTime.now()
         );
 
@@ -57,12 +56,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
 public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
-
-    ex.printStackTrace(); // keep this
+    ex.printStackTrace();
 
     ErrorResponse error = new ErrorResponse(
             false,
-            ex.getMessage(),   // ✅ SHOW REAL ERROR
+            "Internal server error",
             new ArrayList<>(),
             LocalDateTime.now());
 
@@ -74,7 +72,7 @@ public ResponseEntity<ErrorResponse> handleDatabaseError(Exception ex) {
 
     ErrorResponse error = new ErrorResponse(
             false,
-            "Database error: " + ex.getMessage(),
+            "Invalid request data",
             new ArrayList<>(),
             LocalDateTime.now());
 
