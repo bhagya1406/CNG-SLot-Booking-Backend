@@ -2,6 +2,7 @@ package com.example.cng_booking.authentication;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod; // ✅ ADDED IMPORT
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -49,13 +50,17 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable());
 
-           http.cors();
+        http.cors();
 
         http.sessionManagement(sess ->
                 sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
         http.authorizeHttpRequests(auth -> auth
+
+                // ✅ ADDED THIS LINE (VERY IMPORTANT)
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/auth/register-user").permitAll()
                 .requestMatchers("/auth/register-pump").permitAll()
